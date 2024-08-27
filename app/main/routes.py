@@ -1,7 +1,8 @@
 from flask import render_template, request, jsonify
 import markdown
 from app.main import main
-from app.main.utils import gen_response, get_suggestions, load_suggestions_from_json, send_email
+from app.main.utils import gen_response, get_suggestions, load_suggestions_from_json, send_email, clean_response
+
 
 predefined_suggestions = load_suggestions_from_json('suggestions.json')
 
@@ -23,7 +24,8 @@ def save_and_send():
 def chat():
     question = request.form.get("msg")
     response = gen_response(question)
-    html_response = markdown.markdown(response)
+    cleaned_response = clean_response(response)
+    html_response = markdown.markdown(cleaned_response)
     return jsonify({'response': html_response})
 
 @main.route("/")
