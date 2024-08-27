@@ -1,6 +1,7 @@
 import json
 import requests
 import markdown
+import re
 from flask import render_template, request,jsonify
 import torch
 import huggingface_hub
@@ -62,6 +63,13 @@ chat_engine = index.as_chat_engine(
 def gen_response(question):
     response = chat_engine.chat(question)
     return str(response)
+
+def clean_response(response):
+    pattern = r'^\s*assistant\s*'
+ 
+    # Use re.sub to replace the pattern with an empty string
+    cleaned_response = re.sub(pattern, '', response)
+    return cleaned_response
 
 def load_suggestions_from_json(json_file_path):
     with open(json_file_path, 'r') as file:
